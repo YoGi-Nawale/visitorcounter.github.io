@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visitor Counter</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        p {
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        #visitorCount {
+            font-size: 36px;
+            font-weight: bold;
+            color: #007BFF;
+            transition: color 0.3s;
+        }
+
+        #visitorCount.updated {
+            color: #28a745; /* Green color for the animation */
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script>
+        "use strict";
+
+        function incrementCounter() {
+            // Check if local storage is supported
+            if (typeof(Storage) !== "undefined") {
+                // Increment the count
+                var count = parseInt(localStorage.getItem('visitorCount')) || 0;
+                localStorage.setItem('visitorCount', count + 1);
+
+                // Display the count on the webpage
+                var visitorCountElement = document.getElementById('visitorCount');
+                visitorCountElement.innerText = localStorage.getItem('visitorCount');
+
+                // Add a class for the animation
+                visitorCountElement.classList.add('updated');
+
+                // Remove the class after a short delay (1000ms)
+                setTimeout(function() {
+                    visitorCountElement.classList.remove('updated');
+                }, 1000);
+            } else {
+                alert("Sorry, your browser does not support local storage, and the visitor count won't be persisted.");
+            }
+        }
+
+        // Execute the incrementCounter function when the page loads
+        window.onload = function () {
+            incrementCounter();
+        };
+    </script>
+</head>
+<body>
+    <h1>Welcome to the Website</h1>
+    <p>This website has been visited <span id="visitorCount">0</span> times.</p>
+
+    <!-- <a href="javascript:void(0);" onclick="incrementCounter()" role="button" aria-label="Increment Visitor Count">
+        <button>Increment Visitor Count</button>
+    </a> -->
+</body>
+</html>
