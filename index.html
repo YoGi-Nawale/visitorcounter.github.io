@@ -55,27 +55,23 @@
             background-color: #0056b3;
         }
     </style>
-<script>
-    "use strict";
+    <script>
+        "use strict";
 
-    function incrementCounter() {
-        // Check if local storage is supported
-        if (typeof(Storage) !== "undefined") {
-            // Retrieve or generate a unique identifier for the visitor
-            var visitorId = localStorage.getItem('visitorId') || generateVisitorId();
-            
-            // Check if the visitor has already been counted
-            if (!localStorage.getItem('visitorCount_' + visitorId)) {
-                // Increment the count
-                var count = parseInt(localStorage.getItem('visitorCount')) || 0;
-                localStorage.setItem('visitorCount', count + 1);
+        function incrementCounter() {
+            // Check if local storage is supported
+            if (typeof(Storage) !== "undefined") {
+                // Retrieve GitHub ID from local storage or prompt user for input
+                var githubId = localStorage.getItem('githubId') || prompt('gh repo clone YoGi-Nawale/visitorcounter.github.io:');
 
-                // Mark the visitor as counted
-                localStorage.setItem('visitorCount_' + visitorId, true);
+                // Increment the count for the GitHub ID
+                var countKey = 'visitorCount_' + githubId;
+                var count = parseInt(localStorage.getItem(countKey)) || 0;
+                localStorage.setItem(countKey, count + 1);
 
                 // Display the count on the webpage
                 var visitorCountElement = document.getElementById('visitorCount');
-                visitorCountElement.innerText = localStorage.getItem('visitorCount');
+                visitorCountElement.innerText = localStorage.getItem(countKey);
 
                 // Add a class for the animation
                 visitorCountElement.classList.add('updated');
@@ -84,30 +80,23 @@
                 setTimeout(function() {
                     visitorCountElement.classList.remove('updated');
                 }, 1000);
+            } else {
+                alert("Sorry, your browser does not support local storage, and the visitor count won't be persisted.");
             }
-        } else {
-            alert("Sorry, your browser does not support local storage, and the visitor count won't be persisted.");
         }
 
-        // Function to generate a unique visitor identifier
-        function generateVisitorId() {
-            return 'visitor_' + Math.random().toString(36).substr(2, 10);
-        }
-    }
-
-    // Execute the incrementCounter function when the page loads
-    window.onload = function () {
-        incrementCounter();
-    };
-</script>
-
+        // Execute the incrementCounter function when the page loads
+        window.onload = function () {
+            incrementCounter();
+        };
+    </script>
 </head>
 <body>
     <h1>Welcome to the Website</h1>
     <p>This website has been visited <span id="visitorCount">0</span> times.</p>
 
-    <!-- <a href="javascript:void(0);" onclick="incrementCounter()" role="button" aria-label="Increment Visitor Count">
+    <a href="javascript:void(0);" onclick="incrementCounter()" role="button" aria-label="Increment Visitor Count">
         <button>Increment Visitor Count</button>
-    </a> -->
+    </a>
 </body>
 </html>
