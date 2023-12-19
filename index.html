@@ -55,15 +55,23 @@
             background-color: #0056b3;
         }
     </style>
-    <script>
-        "use strict";
+<script>
+    "use strict";
 
-        function incrementCounter() {
-            // Check if local storage is supported
-            if (typeof(Storage) !== "undefined") {
+    function incrementCounter() {
+        // Check if local storage is supported
+        if (typeof(Storage) !== "undefined") {
+            // Retrieve or generate a unique identifier for the visitor
+            var visitorId = localStorage.getItem('visitorId') || generateVisitorId();
+            
+            // Check if the visitor has already been counted
+            if (!localStorage.getItem('visitorCount_' + visitorId)) {
                 // Increment the count
                 var count = parseInt(localStorage.getItem('visitorCount')) || 0;
                 localStorage.setItem('visitorCount', count + 1);
+
+                // Mark the visitor as counted
+                localStorage.setItem('visitorCount_' + visitorId, true);
 
                 // Display the count on the webpage
                 var visitorCountElement = document.getElementById('visitorCount');
@@ -76,16 +84,23 @@
                 setTimeout(function() {
                     visitorCountElement.classList.remove('updated');
                 }, 1000);
-            } else {
-                alert("Sorry, your browser does not support local storage, and the visitor count won't be persisted.");
             }
+        } else {
+            alert("Sorry, your browser does not support local storage, and the visitor count won't be persisted.");
         }
 
-        // Execute the incrementCounter function when the page loads
-        window.onload = function () {
-            incrementCounter();
-        };
-    </script>
+        // Function to generate a unique visitor identifier
+        function generateVisitorId() {
+            return 'visitor_' + Math.random().toString(36).substr(2, 10);
+        }
+    }
+
+    // Execute the incrementCounter function when the page loads
+    window.onload = function () {
+        incrementCounter();
+    };
+</script>
+
 </head>
 <body>
     <h1>Welcome to the Website</h1>
