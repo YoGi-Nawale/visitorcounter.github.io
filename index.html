@@ -55,48 +55,69 @@
             background-color: #0056b3;
         }
     </style>
-    <script>
-        "use strict";
-
-        function incrementCounter() {
-            // Check if local storage is supported
-            if (typeof(Storage) !== "undefined") {
-                // Retrieve GitHub ID from local storage or prompt user for input
-                var githubId = localStorage.getItem('githubId') || prompt('gh repo clone YoGi-Nawale/visitorcounter.github.io:');
-
-                // Increment the count for the GitHub ID
-                var countKey = 'visitorCount_' + githubId;
-                var count = parseInt(localStorage.getItem(countKey)) || 0;
-                localStorage.setItem(countKey, count + 1);
-
-                // Display the count on the webpage
-                var visitorCountElement = document.getElementById('visitorCount');
-                visitorCountElement.innerText = localStorage.getItem(countKey);
-
-                // Add a class for the animation
-                visitorCountElement.classList.add('updated');
-
-                // Remove the class after a short delay (1000ms)
-                setTimeout(function() {
-                    visitorCountElement.classList.remove('updated');
-                }, 1000);
-            } else {
-                alert("Sorry, your browser does not support local storage, and the visitor count won't be persisted.");
+        <script>
+            "use strict";
+    
+            function incrementCounter() {
+                // Check if local storage is supported
+                if (typeof(Storage) !== "undefined") {
+                    // Retrieve GitHub ID from local storage or prompt user for input
+                    var githubId = localStorage.getItem('githubId') || prompt('https://github.com/YoGi-Nawale:');
+    
+                    // Fetch repository information using GitHub API
+                    fetch('https://api.github.com/users/' + githubId + '/repos')
+                        .then(response => response.json())
+                        .then(repos => {
+                            // Check if the repository exists
+                            var repo = repos.find(repo => repo.name === 'visitorcounter.github.io');
+                            if (repo) {
+                                // Repository exists, clone it
+                                alert('Cloning repository...');
+                                // You can use this URL for cloning or perform any other actions with the repo
+                                var cloneUrl = repo.clone_url;
+                                // Add your logic for cloning or other actions
+                            } else {
+                                alert('Repository not found.');
+                            }
+                        })
+                        .catch(error => {
+                            alert('Error fetching repository information. Please try again.');
+                            console.error(error);
+                        });
+    
+                    // Increment the count for the GitHub ID (sample logic, adjust as needed)
+                    var countKey = 'visitorCount_' + githubId;
+                    var count = parseInt(localStorage.getItem(countKey)) || 0;
+                    localStorage.setItem(countKey, count + 1);
+    
+                    // Display the count on the webpage
+                    var visitorCountElement = document.getElementById('visitorCount');
+                    visitorCountElement.innerText = localStorage.getItem(countKey);
+    
+                    // Add a class for the animation
+                    visitorCountElement.classList.add('updated');
+    
+                    // Remove the class after a short delay (1000ms)
+                    setTimeout(function() {
+                        visitorCountElement.classList.remove('updated');
+                    }, 1000);
+                } else {
+                    alert("Sorry, your browser does not support local storage, and the visitor count won't be persisted.");
+                }
             }
-        }
-
-        // Execute the incrementCounter function when the page loads
-        window.onload = function () {
-            incrementCounter();
-        };
-    </script>
-</head>
-<body>
-    <h1>Welcome to the Website</h1>
-    <p>This website has been visited <span id="visitorCount">0</span> times.</p>
-
-    <a href="javascript:void(0);" onclick="incrementCounter()" role="button" aria-label="Increment Visitor Count">
-        <button>Increment Visitor Count</button>
-    </a>
-</body>
-</html>
+    
+            // Execute the incrementCounter function when the page loads
+            window.onload = function () {
+                incrementCounter();
+            };
+        </script>
+    </head>
+    <body>
+        <h1>Welcome to the Website</h1>
+        <p>This website has been visited <span id="visitorCount">0</span> times.</p>
+    
+        <a href="javascript:void(0);" onclick="incrementCounter()" role="button" aria-label="Increment Visitor Count">
+            <button>Increment Visitor Count</button>
+        </a>
+    </body>
+    </html>
